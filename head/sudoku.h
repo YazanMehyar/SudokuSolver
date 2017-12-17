@@ -19,7 +19,7 @@
 
 
 #define BLOCK_SIZE	3
-#define BOARD_SIZE	BLOCK_SIZE*BLOCK_SIZE
+#define BOARD_SIZE	(BLOCK_SIZE*BLOCK_SIZE)
 #define CELL_MASK	((1<<BOARD_SIZE)-1)
 
 typedef struct {
