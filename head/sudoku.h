@@ -13,19 +13,21 @@
 #define WHT  "\x1B[37m"
 #define RESET "\x1B[0m"
 
-#define ERROR(fmt, ...)	fprintf(stderr,RED "ERROR: " fmt RESET "\n", __VA_ARGS__)
-#define DEBUG(fmt, ...)	fprintf(stderr, "%s:%d\t"CYN fmt RESET"\n", __FILE__, __LINE__, __VA_ARGS__)
+#define ERROR(fmt, ...)	fprintf(stderr,RED "ERROR: " fmt RESET"\n", __VA_ARGS__)
+#define DEBUG(fmt, ...)	fprintf(stderr, "%s:%d\t"CYN fmt RESET"\n",\
+						__FILE__, __LINE__, __VA_ARGS__)
 
 
 #define BLOCK_SIZE	3
-const uint8_t BOARD_SIZE = BLOCK_SIZE*BLOCK_SIZE;
+#define BOARD_SIZE	BLOCK_SIZE*BLOCK_SIZE
+#define CELL_MASK	((1<<BOARD_SIZE)-1)
 
 typedef struct {
 	uint16_t	value;
 	bool		solved;
 } SudokuCell;
 
-SudokuCell sudoku_board[BLOCK_SIZE*BLOCK_SIZE][BLOCK_SIZE*BLOCK_SIZE];
+extern SudokuCell sudoku_board[BOARD_SIZE][BOARD_SIZE];
 
 void	parseSudokuFile	(FILE*);
 void	printSudokuBoard(void);
