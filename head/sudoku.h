@@ -13,14 +13,23 @@
 #define WHT  "\x1B[37m"
 #define RESET "\x1B[0m"
 
-#define ERROR(fmt, ...)	fprintf(stderr,RED "ERROR: " fmt RESET"\n", __VA_ARGS__)
-#define DEBUG(fmt, ...)	fprintf(stderr, "%s:%d\t"CYN fmt RESET"\n",\
-						__FILE__, __LINE__, __VA_ARGS__)
+#define ERROR(fmt, ...)	fprintf(stderr,RED "ERROR: " fmt RESET"\n",\
+						##__VA_ARGS__)
+#define DEBUG(fmt, ...)	fprintf(stderr, "%s:%d\t"MAG fmt RESET"\n",\
+						__FILE__, __LINE__, ##__VA_ARGS__)
 
-
-#define BLOCK_SIZE	3
+/*
+NOTE: Simple place holder
+	does NOT allow the program to cope with different size puzzles
+*/
+#define BLOCK_SIZE	3u
 #define BOARD_SIZE	(BLOCK_SIZE*BLOCK_SIZE)
 #define CELL_MASK	((1<<BOARD_SIZE)-1)
+
+/* NOTE: We need integer division here */
+#define BLK_IDX(r,c)	( ((r)/BLOCK_SIZE)*BLOCK_SIZE + (c)/BLOCK_SIZE )
+
+#define GET_LSb(x)		((x) & -(x))
 
 typedef struct {
 	uint16_t	value;
