@@ -1,13 +1,27 @@
 #include "sudoku.h"
 
 /*****************************************************************************************
-*	External variables
+*	Local definitions
 *****************************************************************************************/
-SudokuCell sudoku_board[BOARD_SIZE][BOARD_SIZE];
+typedef struct {
+	uint16_t	value;
+	bool		solved;
+} SudokuCell;
+
+// NOTE:	BLOCK_SIZE is a simple place holder
+//			It DOES NOT allow the program to cope with different size puzzles
+#define BLOCK_SIZE		3u
+#define BOARD_SIZE		(BLOCK_SIZE*BLOCK_SIZE)
+
+// NOTE:	We need integer division here
+#define BLK_IDX(r,c)	( ((r)/BLOCK_SIZE)*BLOCK_SIZE + (c)/BLOCK_SIZE )
+#define GET_LSb(x)		( (x) & -(x) )
+#define CELL_MASK		( (1<<BOARD_SIZE)-1 )
 
 /*****************************************************************************************
-*	Internal variables
+*	Local variables
 *****************************************************************************************/
+static SudokuCell sudoku_board[BOARD_SIZE][BOARD_SIZE];
 
 /*****************************************************************************************
 *	HELPER FUNCTIONS
@@ -161,6 +175,7 @@ filterExclusiveCells(void) {
 		} if(solved) break;
 	} return solved;
 }
+
 /*****************************************************************************************
 *	PUZZLE FUNCTIONS
 *****************************************************************************************/
@@ -248,36 +263,4 @@ solveSudokuBoard(void) {
 			if( !sudoku_board[row][col].solved ) return false;
 		}
 	} return true;
-}
-
-/*****************************************************************************************
-*	MAIN
-*****************************************************************************************/
-
-int
-main(int argc, char const *argv[]) {
-	if(argc != 2) {
-		ERROR("Expected usage:\n%s %s",argv[0], "sudoku_puzzle_file_path");
-		exit(1);
-	}
-
-	FILE *f = fopen(argv[1],"r");
-	if(!f) {
-		ERROR("UNABLE TO OPEN FILE: '%s'", argv[1]);
-		exit(1);
-	}
-
-	parseSudokuFile(f);
-	printf("\nThe starting sudoku puzzle:\n");
-	printSudokuBoard();
-	if(solveSudokuBoard()) {
-		printf("\nGREAT! Found a solution!\n");
-	} else {
-		printf("\nTOO BAD! Could not find a solution. This could be because:\n"
-				"1) The program isn't advanced enough to solve this puzzle\n"
-				"2) The puzzle doesn't have a unique solution\n"
-			);
-	}
-	printSudokuBoard();
-	return 0;
 }
